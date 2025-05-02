@@ -1,0 +1,82 @@
+:root {
+    --primary: #79fff2;        
+    --primary-dark: #505aef;   
+    --text-light: #fff;
+    --text-muted: #f0f0f0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+main {
+    flex: 1;
+}
+
+header,
+footer {
+    background: linear-gradient(135deg, #505aef 0%, #2cb5af 100%);
+    color: var(--text-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+header a,
+footer a {
+    transition: color 0.25s ease, transform 0.25s ease;
+}
+
+header .navbar-brand {
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: .5px;
+    color: var(--text-light) !important;
+}
+
+header .navbar-brand:hover {
+    color: var(--text-muted) !important;
+    transform: translateY(-2px);
+}
+
+header .navbar-nav .nav-link {
+    color: var(--text-light) !important;
+    position: relative;
+    padding: .5rem 1rem;
+}
+
+header .navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--text-muted);
+    transition: width .25s ease;
+}
+
+header .navbar-nav .nav-link:hover {
+    color: var(--text-muted) !important;
+}
+
+header .navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+footer {
+    text-align: center;
+    padding: 24px 16px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: .9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #79fff2;
+        --primary-dark: #505aef;
+    }
+}

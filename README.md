@@ -1,139 +1,239 @@
-# Laravel Docker Setup
+# Carteira Financeira
 
-Este repositório contém a configuração de um **projeto Laravel** utilizando **Docker**. O objetivo deste projeto é fornecer uma maneira fácil e eficiente de configurar e rodar uma aplicação Laravel em um ambiente Docker.
-
-## Tabela de Conteúdos
-
-1. [Pré-requisitos](#pré-requisitos)
-2. [Como Rodar o Projeto](#como-rodar-o-projeto)
-   - [Subir Containers](#subir-containers)
-   - [Parar e Remover Containers](#parar-e-remover-containers)
-   - [Acessar o Container](#acessar-o-container)
-3. [Comandos Laravel](#comandos-laravel)
-   - [Executar Migrações de Banco de Dados](#executar-migrações-de-banco-de-dados)
-   - [Criar Tabela de Sessões no Banco de Dados](#criar-tabela-de-sessões-no-banco-de-dados)
-   - [Iniciar o Servidor de Desenvolvimento](#iniciar-o-servidor-de-desenvolvimento)
-4. [Estrutura do Projeto](#estrutura-do-projeto)
-5. [Como Contribuir](#como-contribuir)
-6. [Licença](#licença)
+Este repositório contém o projeto **Carteira Financeira**, desenvolvido com Laravel e utilizando Docker para gerenciamento do ambiente.
 
 ## Pré-requisitos
 
-Antes de rodar o projeto, certifique-se de ter o seguinte instalado:
+Antes de começar, certifique-se de ter instalado em sua máquina:
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Composer](https://getcomposer.org/)
 
-Você também pode verificar se o Docker e o Docker Compose estão instalados corretamente com os seguintes comandos:
+## Passos para execução
 
+Siga os passos abaixo para configurar e executar o projeto:
+
+1. Clone o repositório:
 ```bash
-docker --version
-docker-compose --version
+git clone https://github.com/v1ncer3/carteira-financeira.git
 ```
 
-## Como Rodar o Projeto
-### Subir Containers
-Para subir os containers e iniciar o ambiente de desenvolvimento, utilize o seguinte comando:
+2. Navegue até o diretório do desafio:
 ```bash
-docker-compose up -d --build
+cd .\carteira-financeira\desafio\
 ```
 
-- docker-compose up: Este comando cria e inicia os containers definidos no arquivo docker-compose.yml
-- -d: Roda os containers em modo detached, ou seja, em segundo plano
-- --build: Força a reconstrução das imagens Docker antes de iniciar os containers
-
-## Parar e Remover Containers
-### Se você deseja parar e remover os containers, redes e volumes associados ao seu projeto, use o comando abaixo:
-
+3. Inicie o Docker e depois inicie os containers Docker:
 ```bash
-docker-compose down -v
+docker compose up -d
 ```
 
-- docker-compose down: Para os containers e remove redes associadas a esse projeto Docker
-- -v: Remove também os volumes, o que é útil para limpar completamente o ambiente de desenvolvimento
+Caso utilize o linux, verifique se o Docker está ativo com o comando e ai inicie os containers com o mesmo comando do passo 3:
+```bash
+sudo systemctl start docker
+```
 
-## Acessar o Container
-### Para acessar o container do Laravel e interagir com ele diretamente, use o seguinte comando:
-
+4. Acesse o container da API Laravel:
 ```bash
 docker exec -it api-laravel-back sh
 ```
 
-- docker exec: Executa um comando dentro de um container em execução
-
-- -it: -i mantém o terminal interativo e -t aloca um terminal para interação
-
-- api-laravel-back: O nome ou ID do container onde o comando será executado (substitua conforme o nome real do seu container)
-
-- sh: Inicia uma shell dentro do container, permitindo que você interaja com o sistema de arquivos e execute comandos diretamente
-
-## Navegar para o Diretório da Aplicação
+5. Navegue até o diretório da aplicação dentro do container:
 ```bash
-cd /app
+cd app
 ```
 
-## Executar Migrações de Banco de Dados
-### Para executar as migrações e garantir que o banco de dados esteja configurado corretamente, use o comando
+6. Crie o arquivo `.env` na raiz do projeto. Para facilitar o teste e uso da aplicação, disponibilizei algumas informações necessárias para a execução e funcionamento correto da aplicação (e consideradas sensíveis) no arquivo. Caso contrário, fique a vontade para parametrizar tanto o .env, quanto o restante de toda a aplicação (dockerfile, docker-composer e afins)::
+- Copie o conteúdo do arquivo `.env.example` e renomeie para `.env`.
+
+7. Instale as dependências do projeto:
+```bash
+composer install
+```
+
+8. Gere a chave da aplicação:
+```bash
+php artisan key:generate
+```
+
+9. Execute as migrações para configurar o banco de dados:
 ```bash
 php artisan migrate
 ```
 
-- php: Executa o PHP
-
-- artisan: É a ferramenta de linha de comando do Laravel, usada para várias operações de desenvolvimento
-
-- migrate: Aplica as migrações de banco de dados, criando ou atualizando as tabelas conforme definido nos arquivos de migração do Laravel
-
-## Criar Tabela de Sessões no Banco de Dados
-### Se você deseja usar o banco de dados para armazenar as sessões de usuário, você precisará criar a tabela de sessões com o seguinte comando:
-
+10. Inicie o servidor de desenvolvimento:
 ```bash
-php artisan session:table
-```
-- session:table: Gera uma migração para criar a tabela de sessões no banco de dados
-
-## Iniciar o Servidor de Desenvolvimento
-### Para iniciar o servidor de desenvolvimento do Laravel e rodar a aplicação, use o comando:
-
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
+php artisan serve
 ```
 
-- php artisan serve: Inicia o servidor embutido do Laravel
+## Acesso à aplicação
 
---host=0.0.0.0: Configura o servidor para ser acessível em todas as interfaces de rede. Isso é necessário se você quiser acessar a aplicação de fora do container
+Após executar o comando `php artisan serve`, a aplicação estará disponível em [http://localhost:80](http://localhost:80).
 
---port=8000: Define a porta em que a aplicação ficará disponível. O padrão é 8000, mas você pode alterar para qualquer outra porta se necessário
+## Observações
+- Será necessário cadastra-se para utilizar a aplicação.
+- Certifique-se de que as portas necessárias para o Docker e o Laravel não estejam em uso por outros serviços.
+- Para quaisquer dúvidas ou problemas, consulte a documentação oficial do [Laravel](https://laravel.com/docs) ou do [Docker](https://docs.docker.com/).
 
-## Estrutura do Projeto
+# Laravel
 
-```bash
-/
-├── docker-compose.yml        # Arquivo de configuração do Docker Compose
-├── Dockerfile                # Dockerfile para construir a imagem do Laravel
-├── app/                      # Diretório da aplicação Laravel
-├── .env                      # Arquivo de configuração do Laravel
-└── .dockerignore             # Arquivo de exclusão para Docker
+### 1. Facilidade de Uso
+O Laravel possui uma sintaxe expressiva e intuitiva, permitindo um desenvolvimento rápido e sem complicações. A estrutura organizada e os recursos como roteamento, autenticação e validação prontos para uso ajudam a manter o código limpo e fácil de manter.
+
+### 2. Padrão Arquitetural MVC
+O Laravel adota o padrão **Model-View-Controller (MVC)**, o que facilita a organização do código e promove a separação clara de responsabilidades. Isso resulta em um código mais modular, escalável e fácil de entender.
+
+### 3. Eloquent ORM
+Com o **Eloquent ORM**, o Laravel proporciona uma maneira simples e poderosa de interagir com o banco de dados. Ele permite operações complexas com o banco de dados sem a necessidade de escrever SQL complexo, acelerando o desenvolvimento e minimizando erros comuns.
+
+### 4. Segurança
+Laravel integra diversas funcionalidades de segurança, como proteção contra SQL Injection, Cross-Site Request Forgery (CSRF), Cross-Site Scripting (XSS) e muito mais. Isso torna o desenvolvimento mais seguro, reduzindo significativamente o risco de vulnerabilidades.
+
+### SQL Injection (Injeção de SQL)
+
+**SQL Injection** é uma vulnerabilidade de segurança que permite que um atacante insira ou "injete" código SQL malicioso em uma consulta SQL legítima. Isso ocorre quando os dados fornecidos pelo usuário (como entradas em formulários) não são devidamente validados ou filtrados antes de serem usados em uma consulta ao banco de dados.
+
+### Como Funciona:
+- O atacante pode manipular as entradas para alterar o comportamento da consulta SQL, executando comandos maliciosos no banco de dados.
+- Por exemplo, se um aplicativo concatenar diretamente a entrada do usuário em uma consulta SQL sem validá-la corretamente, o atacante pode injetar comandos SQL que podem excluir, modificar ou acessar dados sem autorização.
+
+### Exemplo:
+```sql
+SELECT * FROM users WHERE username = '$username' AND password = '$password'
 ```
 
-## Dockerfile
-- O Dockerfile contém as instruções necessárias para construir a imagem do Docker com a configuração do Laravel
+## Cross-Site Request Forgery (CSRF)
 
-## docker-compose.yml
-- O arquivo docker-compose.yml é utilizado para definir e orquestrar múltiplos containers Docker, como o banco de dados, servidor web (Nginx, Apache), e o container PHP
+**Cross-Site Request Forgery (CSRF)** é um tipo de ataque em que um atacante induz um usuário autenticado a executar ações indesejadas em um aplicativo web onde ele está autenticado. O atacante cria um pedido malicioso (por exemplo, uma solicitação de alteração de senha ou de transação) que é enviado automaticamente ao servidor sem o conhecimento ou consentimento do usuário.
 
+### Como Funciona:
+- O atacante cria um link ou script malicioso que faz uma requisição HTTP (como uma mudança de senha ou transferência de fundos) em nome do usuário autenticado.
+- Como o usuário já está autenticado no aplicativo, o servidor aceita a requisição como se fosse legítima, sem que o usuário perceba.
 
-## Configuração do Banco de Dados
+### Exemplo:
+Um atacante envia um link para o usuário, que ao clicar, faz uma requisição para transferir dinheiro da conta do usuário para a conta do atacante, sem que o usuário saiba.
 
-Certifique-se de configurar corretamente o arquivo `.env` com as variáveis de ambiente do banco de dados. Aqui está um exemplo da configuração para o banco de dados MySQL:
+### Prevenção:
+- Usar **tokens CSRF**: Cada formulário enviado pelo aplicativo deve incluir um token único, que é validado pelo servidor para garantir que a requisição é legítima.
+- Validar **cabeçalhos de origem** e **referenciadores** para garantir que a requisição vem do domínio esperado.
 
-```env
-DB_CONNECTION=mysql ou outro...
-DB_HOST=seuhost
-DB_PORT=porta de acesso
-DB_DATABASE=nomedobanco
-DB_USERNAME=root
-DB_PASSWORD=senhadobanco
+## Cross-Site Scripting (XSS)
+
+**Cross-Site Scripting (XSS)** é um ataque onde um atacante injeta scripts maliciosos em páginas web visualizadas por outros usuários. O código malicioso é executado no navegador da vítima, o que pode permitir o roubo de dados sensíveis, como cookies de sessão ou informações de autenticação.
+
+### Como Funciona:
+- O atacante insere código JavaScript malicioso em um campo de entrada (como um formulário de comentários ou um campo de pesquisa) que é posteriormente exibido em uma página web.
+- Quando outros usuários visualizam essa página, o código malicioso é executado em seu navegador, podendo roubar informações ou manipular o comportamento da página.
+
+### Exemplo:
+Um atacante pode inserir um script malicioso em um campo de comentário, como:
+```html
+<script>alert('XSS Attack!');</script>
 ```
-## Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais detalhes
+
+### 5. Suporte à Testabilidade
+Laravel facilita a criação de testes automatizados com integração fácil ao PHPUnit, permitindo que desenvolvedores escrevam testes unitários e de integração de forma simples. Isso garante maior confiabilidade e ajuda a manter a qualidade do código a longo prazo.
+
+# PostgreSQL
+
+### 1. Robustez e Escalabilidade
+O PostgreSQL é um sistema de gerenciamento de banco de dados relacional altamente confiável e robusto, com suporte a grandes volumes de dados e a operações complexas. Ele é ideal para sistemas em crescimento, oferecendo alta escalabilidade sem perda de performance.
+
+### 2. Suporte a SQL Padrão e Extensões
+PostgreSQL segue rigorosamente o padrão SQL e oferece suporte a extensões, como JSONB e Full-Text Search, que permitem trabalhar com tipos de dados não relacionais e realizar buscas avançadas de forma eficiente.
+
+### 3. Consistência e Integridade
+Com suporte completo a transações ACID (Atomicidade, Consistência, Isolamento e Durabilidade), o PostgreSQL garante integridade dos dados e um ambiente seguro para realizar operações críticas.
+
+### 4. Comunidade Ativa e Suporte
+PostgreSQL tem uma comunidade muito ativa e vasta documentação, facilitando a resolução de problemas e a implementação de soluções avançadas. Além disso, sua popularidade garante um grande ecossistema de ferramentas e extensões.
+
+### 5. Desempenho
+O PostgreSQL é otimizado para consultas complexas e de alto desempenho, com suporte a índices avançados, como índices GIN, GiST e BRIN, garantindo uma performance excelente mesmo em bases de dados muito grandes.
+
+# Docker
+
+O **Docker** é uma plataforma open-source que automatiza o processo de construção, envio e execução de aplicações dentro de containers. Um container é uma unidade leve, portátil e autossuficiente que inclui tudo o que a aplicação precisa para rodar, como código, bibliotecas, dependências e configurações. Isso garante que a aplicação tenha o mesmo comportamento em diferentes ambientes, desde desenvolvimento até produção.
+
+### Como o Docker Funciona
+
+- **Container**: O container Docker é uma instância isolada que contém tudo o que a aplicação precisa para ser executada. Ele compartilha o mesmo sistema operacional do host, mas é isolado de outros containers e do próprio sistema.
+  
+- **Imagem**: A imagem Docker é um arquivo imutável que contém a configuração do container, incluindo o sistema operacional, dependências e o código da aplicação. As imagens podem ser versionadas e compartilhadas, facilitando a reutilização e a padronização de ambientes.
+
+- **Docker Engine**: O Docker Engine é o motor de execução dos containers. Ele pode ser instalado em diferentes sistemas operacionais como Linux, Windows e macOS.
+
+Utilizar o Docker oferece várias vantagens, tanto para desenvolvedores quanto para equipes de operações (DevOps):
+
+#### 1. **Portabilidade**
+- **Consistência entre ambientes**: O Docker garante que a aplicação será executada da mesma maneira em qualquer lugar, seja em máquinas locais, servidores de teste ou produção. Isso resolve problemas de inconsistência entre ambientes, como a famosa frase "funcionou na minha máquina".
+- **Imagens reutilizáveis**: As imagens Docker podem ser versionadas e compartilhadas facilmente, facilitando a colaboração entre equipes e a padronização dos ambientes de desenvolvimento.
+
+#### 2. **Isolamento**
+- **Ambientes isolados**: Cada container é executado de maneira isolada, o que permite rodar múltiplos containers com diferentes versões de dependências ou até diferentes aplicações, sem interferência entre eles.
+- **Redução de conflitos**: Isso evita conflitos de dependências ou versões de software entre projetos diferentes.
+
+#### 3. **Eficiência e Escalabilidade**
+- **Menor consumo de recursos**: Containers são mais leves que máquinas virtuais, pois compartilham o mesmo kernel do sistema operacional, permitindo rodar mais containers no mesmo hardware.
+- **Escalabilidade facilitada**: O Docker torna fácil a criação de arquiteturas escaláveis. Ferramentas como **Docker Compose** e **Kubernetes** podem ser usadas para orquestrar containers em larga escala.
+
+#### 4. **Automação de Desenvolvimento e Deploy**
+- **Ambientes de desenvolvimento consistentes**: O Docker permite que todos os desenvolvedores tenham o mesmo ambiente, garantindo que a aplicação se comporte de maneira consistente em todas as máquinas.
+- **Facilidade no deploy**: A automação de ambientes de produção e a criação de pipelines de CI/CD são facilitadas, tornando o processo de entrega de software mais rápido e confiável.
+
+Com o Docker, as equipes podem simplificar o desenvolvimento, garantir consistência em diferentes ambientes e aumentar a eficiência de suas operações.
+
+
+# Como funciona a aplicação **Carteira Financeira**
+
+## **Objetivo**  
+O sistema **Carteira Financeira** foi desenvolvido com o propósito de simular uma interface funcional equivalente a uma carteira financeira, permitindo que os usuários realizem transferências de saldo, depósitos e acompanhem suas operações de forma segura e eficiente.
+
+---
+
+## **Fluxo de Uso do Sistema**  
+
+1. **Cadastro de Usuário**  
+   - Ao inicializar o sistema, não haverá dados relacionados a usuários no banco de dados.  
+   - Para começar, clique no botão **Entrar** e, em seguida, acesse a opção **Cadastrar-se**.  
+   - Preencha o formulário com **nome**, **e-mail**, **senha** e **confirmação de senha**.  
+   - Após o cadastro, você será automaticamente redirecionado para a tela de **Contas Bancárias**, onde uma conta inicial será criada para você.
+
+2. **Tela de Contas Bancárias**  
+   Na tela de **Contas Bancárias**, você terá acesso a quatro ações principais:  
+   
+   ### **1. Transferir**
+   - Permite transferir valores entre contas do mesmo usuário ou para contas de outros usuários.  
+   - **Regras:**  
+     - O valor da transferência deve ser menor ou igual ao saldo disponível na conta.  
+   
+   ### **2. Depositar**
+   - Permite inserir valores em uma conta específica.  
+   - Caso a conta esteja com saldo negativo, o depósito será somado ao saldo atual, cobrindo o valor negativo.  
+
+   ### **3. Visualizar Operações**
+   - Redireciona para uma tela onde você pode visualizar todas as operações realizadas:  
+     - **Depósitos**  
+     - **Recebimento de transferências**  
+     - **Envio de transferências**  
+   - Nessa tela, você terá a opção de **desfazer uma operação**, desde que:  
+     - O saldo da conta seja suficiente para reverter a operação.
+
+   ### **4. Cadastrar Nova Conta**
+   - Permite criar uma nova conta bancária, caso o usuário precise gerenciar mais de uma conta.  
+
+---
+
+## **Requisitos Funcionais**  
+- Criar cadastro de usuários.  
+- Implementar autenticação de usuários.  
+- Permitir transferência de valores entre contas (mesmo usuário e usuários diferentes).  
+- Validar saldo antes de realizar transferências.  
+- Permitir depósitos em contas bancárias.  
+- Garantir a reversão de transferências ou depósitos em caso de inconsistência ou por solicitação do usuário.  
+
+---
+
+Este sistema foi projetado para garantir segurança, consistência e facilidade de uso ao gerenciar finanças pessoais de maneira digital.

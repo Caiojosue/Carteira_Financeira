@@ -1,0 +1,50 @@
+services:
+  php-apache:
+    build: .
+    ports:
+      - "8000:8000"
+    image: webdevops/php-apache-dev:8.2-alpine
+    container_name: api-laravel-back
+    restart: always
+    volumes:
+      - .:/app
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: desafio
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9001:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  portainer_data:
